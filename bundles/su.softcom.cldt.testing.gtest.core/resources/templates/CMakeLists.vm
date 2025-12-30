@@ -1,0 +1,4 @@
+# CMakeLists.txt для тестов Google Test
+# Сгенерировано автоматически
+
+find_package(GTest REQUIRED)

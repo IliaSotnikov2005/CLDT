@@ -1,0 +1,73 @@
+/**
+ * @brief Тесты для #if(${className} && ${className} != "")#if(${namespace} && ${namespace} != "")класса ${namespace}::${className}#elseкласса ${className}#end#else#if(${namespace} && ${namespace} != "")функций из namespace ${namespace}#elseфункций#end#end.$newline */
+
+\#include <gtest/gtest.h>
+\#include "${headerPath}"
+
+#if(${isFixtureNeeded})
+class ${testName} : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // TODO: Настройте окружение
+#if(${className} && ${className} != "")
+    #if(${namespace} && ${namespace} != "")
+    testObject = new ${namespace}::${className}();
+    #else
+    testObject = new ${className}();
+    #end
+#end
+    }
+    
+    void TearDown() override {
+        // TODO: Очистите окружение
+#if(${className} && ${className} != "")
+        delete testObject;
+        testObject = nullptr;
+#end
+    }
+    
+#if(${className} && ${className} != "")
+    #if(${namespace} && ${namespace} != "")
+${namespace}::${className}* testObject{nullptr};
+    #else
+${className}* testObject{nullptr};
+    #end
+#end$newline};
+
+#foreach($method in $methods)
+TEST_F(${testName}, ${method.toUpperCase()}_Test) {
+    // TODO: Напишите тест для #if(${className} && ${className} != "")#if(${namespace} && ${namespace} != "")${namespace}::${className}::${method}#else${className}::${method}#end#else#if(${namespace} && ${namespace} != "")функции ${namespace}::${method}#elseфункции ${method}#end#end
+#if(${className} && ${className} != "")$newline
+    // testObject->${method}();
+#else
+    #if(${namespace} && ${namespace} != "")
+    // ${namespace}::${method}();
+    #else
+    // ${method}();
+    #end
+#end
+}
+#end
+#else
+## Без фикстуры
+#foreach($method in $methods)
+TEST(${testName}, ${method.toUpperCase()}_Test) {
+    // TODO: Напишите тест для #if(${className} && ${className} != "")#if(${namespace} && ${namespace} != "")${namespace}::${className}::${method}#else${className}::${method}#end#else#if(${namespace} && ${namespace} != "")функции ${namespace}::${method}#elseфункции ${method}#end#end
+#if(${className} && ${className} != "")
+    #if(${namespace} && ${namespace} != "")
+$newline    // ${namespace}::${className} testObject;
+    // testObject.${method}();
+    #else
+$newline    // ${className} testObject;
+    // testObject.${method}();
+    #end
+#else
+    #if(${namespace} && ${namespace} != "")
+$newline    //${namespace}::${method}();
+    #else
+$newline    // ${method}();
+    #end
+#end$newline}
+
+#end
+#end

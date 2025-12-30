@@ -1,31 +1,39 @@
 package su.softcom.cldt.core.source;
 
+import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.lsp4j.DocumentSymbol;
+import org.eclipse.core.runtime.Status;
+import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 import su.softcom.cldt.core.CMakeCorePlugin;
 import su.softcom.cldt.core.cmake.ICMakeProject;
 import su.softcom.cldt.core.cmake.Target;
-import su.softcom.cldt.internal.core.lsp.DocumentSymbolHandler;
+import su.softcom.cldt.core.lsp.symbols.ISymbolService;
+import su.softcom.cldt.core.lsp.symbols.SymbolSnapshot;
+import su.softcom.cldt.core.preferences.CMakePreferences;
 
 /**
- * Cpp реализация ISourceFile.
+ * Реализация ISourceFile.
  */
 public class SourceFile extends AbstractSourcePart implements ISourceFile {
 
 	private static final String SRC_IS_GENERATED = "src_gen"; //$NON-NLS-1$
-	private static final String SRC_PATH = "src_path"; //$NON-NLS-1$
 
 	/**
 	 * Типы исходных файлов, поддерживаемые в CMake-проектах.
@@ -86,48 +94,39 @@ public class SourceFile extends AbstractSourcePart implements ISourceFile {
 		}
 	}
 
-	int backtrace;
-	int compileGroupIndex;
-	int sourceGroupIndex;
-	boolean isGenerated;
+	private boolean isGenerated;
+	private IFile file;
 
 	private final ICMakeProject cmakeProject;
 	private final List<Target> targets = new ArrayList<>();
-
-	private String name;
-	private IFile file;
-	private SourceType type;
-	private boolean isDirty;
-	private Preferences preferences;
-	private final List<ISourceElement> elements = new LinkedList<>();
+	private final String name;
+	private final SourceType type;
 
 	/**
-	 * Явное создание исходного файла CMake
+	 * Восстановление или создание SourceFile по пути и таргету.
 	 * 
-	 * @param path   IPath к eclipse файлу
-	 * @param target цель сборки к которому относиться этот файл
+	 * @param projectRelPath путь к SourceFile, может быть отностительным проекту
+	 * @param target         цель сборки, в который включен этот SourceFile
 	 */
-	public SourceFile(IPath path, Target target) {
-		this(path.lastSegment(), target.getProject());
-		this.isGenerated = true;
-		this.file = (IFile) project.findMember(path);
+	public SourceFile(IPath projectRelPath, Target target) {
+		this(projectRelPath.lastSegment(), target.getProject());
+		load(projectRelPath, target).ifPresent(sf -> {
+			this.file = sf.file;
+			this.isGenerated = sf.isGenerated;
+			addTarget(target);
+		});
 	}
 
-	/**
-	 * Cоздание CppSource используя {@code Preferences}
-	 * 
-	 * @param name   имя исходного файла
-	 * @param target цель сборки
-	 */
-	public SourceFile(String name, Target target) {
-		this(name, target.getProject());
-		IResource foundRes = project.findMember(preferences.get(SRC_PATH, "")); //$NON-NLS-1$
-		if (foundRes instanceof IFile f) {
-			this.file = f;
-		} else {
-			this.file = null;
+	public SourceFile(IPath projectRelPath, ICMakeProject project) {
+		this(projectRelPath.lastSegment(), project);
+		IProject prj = project.getProject();
+		var res = prj.findMember(projectRelPath);
+		if (!(res instanceof IFile)) {
+			file = null;
 		}
-		this.isGenerated = preferences.getBoolean(SRC_IS_GENERATED, false);
+
+		file = (IFile) res;
+		isGenerated = false;
 	}
 
 	private SourceFile(String name, ICMakeProject project) {
@@ -135,9 +134,6 @@ public class SourceFile extends AbstractSourcePart implements ISourceFile {
 		this.cmakeProject = project;
 		this.type = getSourceType(name);
 		this.name = name;
-		this.preferences = new ProjectScope(project.getProject()).getNode(CMakeCorePlugin.PLUGIN_ID)
-				.node(ISourcePart.SOURCES_CONTAINER).node(name);
-		this.isDirty = true;
 	}
 
 	@Override
@@ -166,21 +162,24 @@ public class SourceFile extends AbstractSourcePart implements ISourceFile {
 	}
 
 	/**
-	 * 
+	 * @param target
 	 */
-	public void save() {
-		if (file == null) {
+	public void save(Target target) {
+		if (file == null)
 			return;
+		Preferences n = CMakePreferences.nodeForPath(cmakeProject.getProject(), target, file.getProjectRelativePath());
+		n.putBoolean(SRC_IS_GENERATED, isGenerated);
+		try {
+			n.flush();
+		} catch (BackingStoreException e) {
+			CMakeCorePlugin.logError(Messages.SourceFile_0.formatted(this.name), e);
 		}
-		if (preferences == null) {
-			preferences = new ProjectScope(project).getNode(CMakeCorePlugin.PLUGIN_ID)
-					.node(ISourcePart.SOURCES_CONTAINER).node(name);
-		}
-		preferences.putBoolean(SRC_IS_GENERATED, isGenerated);
-		preferences.put(SRC_PATH, file.getProjectRelativePath().toPortableString());
 	}
 
 	/**
+	 * Добавление цели сборки к этому SourceFile. Если такая цель сборки уже есть,
+	 * то ничего не добавит
+	 * 
 	 * @param target
 	 */
 	@Override
@@ -192,11 +191,108 @@ public class SourceFile extends AbstractSourcePart implements ISourceFile {
 	}
 
 	/**
+	 * Цели сборки в который включен этот исходный файл
+	 * 
 	 * @return targets
 	 */
 	@Override
 	public List<Target> getTargets() {
 		return targets;
+	}
+
+	@Override
+	public String toString() {
+		return " %s in %s".formatted(this.getName(), this.cmakeProject.toString()); //$NON-NLS-1$
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getAdapter(Class<T> adapter) {
+		Assert.isNotNull(adapter);
+		if (adapter.isInstance(this)) {
+			return (T) this;
+		}
+		if (IFile.class.equals(adapter)) {
+			return (T) this.file;
+		}
+		if (IResource.class.equals(adapter)) {
+			return (T) this.file;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		SourceFile other = (SourceFile) o;
+		if (this.file == null || other.file == null)
+			return false;
+		return Objects.equals(this.file.getFullPath(), other.file.getFullPath());
+	}
+
+	@Override
+	public int hashCode() {
+		return file != null ? file.getFullPath().hashCode() : 0;
+	}
+
+	/**
+	 * Может вернуть пустой список, если символы ещё не получены.
+	 */
+	@Override
+	public List<ISourceElement> getElements() {
+		ISymbolService symbolService = CMakeCorePlugin.getDefault().getSymbolService();
+		SymbolSnapshot symbolSnapshot = symbolService.getSnapshot(file);
+		if (symbolSnapshot != null && symbolSnapshot.isReady()) {
+			return symbolSnapshot.getSymbols().stream()
+					.map(sym -> SourcePartFactory.getDefault().getSourceElement(sym, this)).toList();
+		}
+		var snap = symbolService.getSnapshot(file);
+		return snap.getSymbols().stream().map(sym -> SourcePartFactory.getDefault().getSourceElement(sym, this))
+				.toList();
+	}
+
+	/**
+	 * Асинхронно возвращает элементы, инициируя запрос символов при необходимости.
+	 * 
+	 * Безопасно вызывать из UI
+	 * 
+	 * @return CompletableFuture<List<ISourceElement>>
+	 */
+	@Override
+	public CompletableFuture<List<ISourceElement>> getElementsAsync() {
+		ISymbolService symbolService = CMakeCorePlugin.getDefault().getSymbolService();
+		var snap = symbolService.getSnapshot(file);
+		if (snap.isReady()) {
+			return CompletableFuture.completedFuture(snap.getSymbols().stream()
+					.map(sym -> SourcePartFactory.getDefault().getSourceElement(sym, this)).toList());
+		}
+		return symbolService.loadAsync(file).thenApply(s -> s.getSymbols().stream()
+				.map(sym -> SourcePartFactory.getDefault().getSourceElement(sym, this)).toList());
+	}
+
+	/**
+	 * Блокирует текущий поток до получения элементов или таймаута. Не вызывать из
+	 * UI потока!
+	 * 
+	 * @param timeout
+	 * @return List of ISourceElement
+	 * @throws CoreException
+	 */
+	public List<ISourceElement> getElementsBlocking(Duration timeout) throws CoreException {
+		try {
+			return getElementsAsync().orTimeout(timeout.toMillis(), TimeUnit.MILLISECONDS).join();
+		} catch (CompletionException e) {
+			throw new CoreException(
+					new Status(IStatus.ERROR, CMakeCorePlugin.PLUGIN_ID, Messages.ErrorFetchSymbols_21, e));
+		}
+	}
+
+	@Override
+	public String getIdentifierName() {
+		return name;
 	}
 
 	private SourceType getSourceType(String fileStr) {
@@ -216,87 +312,16 @@ public class SourceFile extends AbstractSourcePart implements ISourceFile {
 		};
 	}
 
-	@Override
-	public String toString() {
-		return " %s in %s".formatted(this.getName(), this.cmakeProject.toString()); //$NON-NLS-1$
+	private static Optional<SourceFile> load(IPath projectRelPath, Target target) {
+		IProject prj = target.getProject().getProject();
+		Preferences n = CMakePreferences.nodeForPath(prj, target, projectRelPath);
+		var res = prj.findMember(projectRelPath);
+		if (!(res instanceof IFile f))
+			return Optional.empty();
+		boolean gen = n.getBoolean(SRC_IS_GENERATED, false);
+		SourceFile sf = new SourceFile(f.getName(), target.getProject());
+		sf.file = f;
+		sf.isGenerated = gen;
+		return Optional.of(sf);
 	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getAdapter(Class<T> adapter) {
-		Assert.isNotNull(adapter);
-		if (IFile.class.equals(adapter)) {
-			return (T) file;
-		}
-		if (IResource.class.equals(adapter)) {
-			return (T) file;
-		}
-		return null;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || getClass() != obj.getClass()) {
-			return false;
-		}
-		SourceFile other = (SourceFile) obj;
-		if (!other.getName().equals(this.getName())) {
-			return false;
-		}
-		if (file == null || other.file == null) {
-			return false;
-		}
-		String othersPathStr = other.getFile().getLocation().toOSString();
-		return file.getLocation().toOSString().equals(othersPathStr);
-	}
-
-	@Override
-	public int hashCode() {
-		int result = 17;
-		result = 31 * result + (name != null ? name.hashCode() : 0);
-		result = 31 * result + (cmakeProject != null ? cmakeProject.hashCode() : 0);
-		return result;
-	}
-
-	/**
-	 * Sets Dirty status
-	 * 
-	 * @param isDirty value
-	 */
-	public void setDirty(boolean isDirty) {
-		this.isDirty = isDirty;
-	}
-
-	@Override
-	public List<ISourcePart> getElements() {
-		if (isDirty) {
-			refreshElements();
-		}
-		return Collections.unmodifiableList(elements);
-	}
-
-	private void refreshElements() {
-		List<DocumentSymbol> symbols = DocumentSymbolHandler.getSymbols(this);
-		elements.clear();
-		var tmp = symbols.stream().map(symbol -> SourcePartFactory.getDefault().getSourceElement(symbol, this))
-				.toList();
-		elements.addAll(tmp);
-		// TODO подумать как тут лучше сделать
-//		for (DocumentSymbol sym : symbols) {
-//			ISourceElement elem = SourcePartFactory.getDefault().getSourceElement(sym, this);
-//			if (!elements.contains(elem)) {
-//				elements.add(elem);
-//			}
-//
-//		}
-	}
-
-	@Override
-	public String getIdentifierName() {
-		return (file != null) ? file.getFullPath().toString() : name;
-	}
-
 }

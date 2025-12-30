@@ -5,7 +5,7 @@ package su.softcom.cldt.internal.core.cmake.tokens;
  */
 public abstract class CommentToken extends CMakeToken {
 
-	CommentToken(int offset) {
+	protected CommentToken(int offset) {
 		super(offset);
 	}
 

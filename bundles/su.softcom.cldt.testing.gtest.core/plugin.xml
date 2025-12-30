@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="su.softcom.cldt.testing.gtest.core.launch.GTestLaunchDelegate"
+            id="su.softcom.cldt.testing.gtest.core.launchConfigurationType"
+            modes="run"
+            name="%gtest.launch.name"
+            public="true">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="su.softcom.cldt.core.cmake.modifier">
+      <modifier
+            class="su.softcom.cldt.testing.gtest.internal.core.GTestRootTreeModifier">
+      </modifier>
+   </extension>
+</plugin>

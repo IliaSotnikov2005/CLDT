@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="su.softcom.cldt.testing.gtest.ui.GTestPreferencePage"
+            id="su.softcom.cldt.testing.gtest.ui.GtestPreferencePage"
+            name="%gtest.prefs.pages.name">
+      </page>
+   </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+          class="su.softcom.cldt.testing.gtest.ui.tabs.GTestTabGroup"
+          id="su.softcom.cldt.gtest.ui.tabgroup"
+          type="su.softcom.cldt.testing.gtest.core.launchConfigurationType">
+    </launchConfigurationTabGroup>
+ </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    <launchConfigurationTypeImage
+          configTypeID="su.softcom.cldt.testing.gtest.core.launchConfigurationType"
+          icon="icons/google-icon-16.png"
+          id="su.softcom.cldt.testing.gtest.ui.launchConfigurationTypeImage">
+    </launchConfigurationTypeImage>
+ </extension>
+ <extension point="org.eclipse.ui.newWizards">
+    <category
+        id="su.softcom.cldt.testing.wizards"
+        name="Тестирование">
+    </category>
+    <wizard
+        category="su.softcom.cldt.testing.wizards"
+        class="su.softcom.cldt.testing.gtest.ui.wizards.TestFileWizard"
+        id="su.softcom.cldt.testing.wizards.testFileWizard"
+        name="Сгенерировать файл"
+        project="true"
+        icon="icons/addTest.png">
+    </wizard>
+  </extension>
+ <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+      category="su.softcom.cldt.ui.preferences.cppProperties"
+            id="su.softcom.cldt.testing.gtest.ui.GTestPropertyPage"
+            name="GTest"
+            class="su.softcom.cldt.testing.gtest.ui.GTestPropertyPage">
+         <enabledWhen>
+				<reference
+					definitionId="su.softcom.cldt.enablement">
+				</reference>
+			</enabledWhen>
+      </page>
+   </extension>
+  	<extension point="org.eclipse.ui.navigator.navigatorContent">
+    <navigatorContent
+        activeByDefault="true"
+        contentProvider="su.softcom.cldt.testing.gtest.ui.GTestContentProvider"
+        icon="icons/view16/test.png"
+        id="su.softcom.cldt.ui.navigatorContent.gtest"
+        labelProvider="su.softcom.cldt.testing.gtest.ui.GTestLabelProvider"
+        name="GTest Content"
+        priority="normal">
+        
+        <triggerPoints>
+            <or>
+                <instanceof value="org.eclipse.core.resources.IProject"/>
+                <instanceof value="su.softcom.cldt.testing.gtest.ui.models.IGTestContentProviderNode"/>
+            </or>
+        </triggerPoints>
+        
+        <possibleChildren>
+            <or>
+                <instanceof value="su.softcom.cldt.testing.gtest.ui.models.IGTestContentProviderNode"/>
+            </or>
+        </possibleChildren>
+        
+        <!-- Action Provider для тестов -->
+        <actionProvider
+            class="su.softcom.cldt.testing.gtest.ui.actions.GTestActionProvider"
+            id="su.softcom.cldt.testing.gtest.ui.actions.gtestActionProvider"
+            priority="normal">
+            <enablement>
+                <or>
+                    <instanceof value="su.softcom.cldt.testing.gtest.ui.models.IGTestContentProviderNode"/>
+                </or>
+            </enablement>
+        </actionProvider>
+        
+    </navigatorContent>
+</extension>
+<extension
+         point="org.eclipse.ui.views">
+      <view
+            name="Результаты GTest"
+            icon="icons/test.png"
+            class="su.softcom.cldt.testing.gtest.ui.GTestView"
+            id="su.softcom.cldt.testing.gtest.views.GTestView">
+      </view>
+   </extension>
+</plugin>

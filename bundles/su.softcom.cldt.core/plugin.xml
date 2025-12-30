@@ -12,6 +12,13 @@
                type="org.eclipse.debug.ui.actions.ILaunchable">
          </adapter>
       </factory>
+      <factory
+            adaptableType="org.eclipse.core.resources.IProject"
+            class="su.softcom.cldt.core.adapters.CMakeProjectAdapterFactory">
+         <adapter
+               type="su.softcom.cldt.core.cmake.ICMakeProject">
+         </adapter>
+      </factory>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
@@ -25,7 +32,7 @@
        point="org.eclipse.core.resources.natures">
 	   <runtime>
 	      <run
-	            class="su.softcom.cldt.core.CmakeProjectNature">
+	            class="su.softcom.cldt.core.CMakeProjectNature">
 	      </run>
 	   </runtime>
     <builder
@@ -89,7 +96,7 @@
           isConfigurable="true"
           supportsConfigurations="true">
        <run
-             class="su.softcom.cldt.core.cmake.CMakeModifier">
+             class="su.softcom.cldt.internal.core.builders.CMakeModifier">
        </run>
     </builder>
  </extension>
@@ -216,8 +223,10 @@
          point="org.eclipse.lsp4e.languageServer">
       <server
             class="su.softcom.cldt.internal.core.lsp.CStreamConnectionProvider"
+            clientImpl="org.eclipse.lsp4e.LanguageClientImpl"
             id="su.softcom.cldt.core.сserver"
-            label="%languageserver.clanguageserver">
+            label="%languageserver.clanguageserver"
+            singleton="false">
       </server>
       <contentTypeMapping
             contentType="su.softcom.cldt.core.editors.contenttype.c"

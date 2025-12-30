@@ -11,22 +11,22 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
-import su.softcom.cldt.core.cmake.CMakeModifier;
+import su.softcom.cldt.internal.core.builders.CMakeModifier;
 
 public class CMakeUpdateNature implements IProjectNature {
 
 	public static final String ID = "su.softcom.cldt.core.cmakesync"; //$NON-NLS-1$
-	
+
 	IProject project;
 
 	@Override
 	public void configure() throws CoreException {
 		IProjectDescription description = project.getDescription();
 		List<String> natures = Arrays.asList(description.getNatureIds());
-		if (!natures.contains(CmakeProjectNature.ID)) {
+		if (!natures.contains(CMakeProjectNature.ID)) {
 			List<String> newNatures = new ArrayList<String>();
 			newNatures.addAll(natures);
-			newNatures.add(CmakeProjectNature.ID);
+			newNatures.add(CMakeProjectNature.ID);
 			description.setNatureIds(newNatures.toArray(new String[newNatures.size()]));
 
 		}
@@ -45,9 +45,11 @@ public class CMakeUpdateNature implements IProjectNature {
 		List<ICommand> buildCommands = new ArrayList<>(Arrays.asList(description.getBuildSpec()));
 		List<ICommand> toRemove = buildCommands.stream().filter(e -> e.getBuilderName().equals(CMakeModifier.ID))
 				.toList();
-		if (toRemove.size() > 0) {
-			buildCommands.removeAll(buildCommands);
+
+		if (!toRemove.isEmpty()) {
+			buildCommands.removeAll(toRemove);
 		}
+
 		description.setBuildSpec(buildCommands.toArray(new ICommand[buildCommands.size()]));
 		project.setDescription(description, new NullProgressMonitor());
 	}

@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.Assert;
 
+import su.softcom.cldt.internal.core.cmake.tokens.BracketedToken;
 import su.softcom.cldt.internal.core.cmake.tokens.CMakeToken;
+import su.softcom.cldt.internal.core.cmake.tokens.QuotedToken;
 import su.softcom.cldt.internal.core.cmake.tokens.RawToken;
 
 /**
@@ -29,7 +31,17 @@ public class CommandNode extends CMakeNode implements ICMakeCommand {
 		this(name.getValue(), null);
 		Assert.isNotNull(args);
 		for (CMakeToken arg : args) {
-			addArg(arg.getValue());
+			if (arg instanceof QuotedToken) {
+				ArgumentNode argNode = new ArgumentNode(this, arg.getValue());
+				argNode.makeQuoted();
+				addArg(argNode);
+			} else if (arg instanceof BracketedToken) {
+				ArgumentNode argNode = new ArgumentNode(this, arg.getValue());
+				argNode.makeBracketed();
+				addArg(argNode);
+			} else {
+				addArg(arg.getValue());
+			}
 		}
 	}
 
