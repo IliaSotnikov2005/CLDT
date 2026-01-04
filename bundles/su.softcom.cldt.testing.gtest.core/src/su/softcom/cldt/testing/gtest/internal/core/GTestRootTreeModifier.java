@@ -27,8 +27,8 @@ import su.softcom.cldt.testing.gtest.core.GTestUtils;
 import su.softcom.cldt.testing.gtest.core.model.GTestInstance;
 
 /**
- * Модификатор CMake дерева. Добавляет директорию с тестами в корневую конфигурацию CMake.
- * Для конфигурации CMake тестов вызывает дополнительный модификатор.
+ * Модификатор CMake дерева. Добавляет директорию с тестами в конфигурацию CMake.
+ * Для файла конфигурации CMake тестов вызывает дополнительный модификатор {@link GTestTestConfigurationTreeModifier}.
  * Сгенерированный код помечается комментариями.
  */
 public class GTestRootTreeModifier implements ICMakeTreeModifier {

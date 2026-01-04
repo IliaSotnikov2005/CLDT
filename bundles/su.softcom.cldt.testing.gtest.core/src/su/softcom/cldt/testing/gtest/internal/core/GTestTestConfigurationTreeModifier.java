@@ -36,6 +36,7 @@ public class GTestTestConfigurationTreeModifier implements ICMakeTreeModifier{
 		// empty
 	}
 
+	@Override
 	public void modifyTree(ICMakeProject project, CMakeRoot root) {
 		instance = GTestUtils.getGTestInstanceForProject(project.getProject());
 

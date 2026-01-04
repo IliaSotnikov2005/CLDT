@@ -73,7 +73,7 @@ public final class GTestUtils {
 	 * 
 	 * @param project    проект
 	 * @param folderName имя папки для тестов
-	 * @return объект папки
+	 * @return объект папки, null в случае ошибки
 	 */
 	public static IFolder createTestsFolderIfNotExists(IProject project, String folderName) {
 		if (project == null || folderName == null || folderName.trim().isEmpty()) {
@@ -98,17 +98,18 @@ public final class GTestUtils {
 	}
 
 	/**
-	 * Создаёт начальное содержимое CMakeLists.txt тестов.
+	 * Создаёт начальное содержимое файла конфигурации CMake для тестов.
+	 * @return начальное содержимое файла конфигурации
 	 */
 	public static String generateCMakeListsContent() {
 		return loadTemplate("CMakeLists.vm", new HashMap<>());
 	}
 
 	/**
-	 * Получает GTestInstance для переданного проекта.
+	 * Получает экземпляр GTest для переданного проекта.
 	 * 
 	 * @param project проект
-	 * @return экземпляр GTest, null если глобальные настройки пустые
+	 * @return экземпляр GTest, null в случае пустых настроек
 	 */
 	public static GTestInstance getGTestInstanceForProject(IProject project) {
 		IEclipsePreferences preferences = new ProjectScope(project.getProject()).getNode(GTestConstants.GTEST_NODE);

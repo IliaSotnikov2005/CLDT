@@ -12,12 +12,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
 /**
- * Слушатель для обновления проекта. Обновляет тесты.
+ * Обновляет тесты при обновлении проекта.
  */
 public class GTestRefreshListener implements IExecutionListener {
     
     private static GTestRefreshListener instance;
     
+    /**
+     * Инициализирует слушатель.
+     */
     public static void init() {
         if (instance == null) {
             instance = new GTestRefreshListener();

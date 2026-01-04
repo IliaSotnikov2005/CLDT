@@ -3,7 +3,7 @@ package su.softcom.cldt.testing.gtest.ui.models;
 import org.eclipse.core.resources.IProject;
 
 /**
- * Корневой элемент тестового дерева.
+ * Элемент {@link GTestContentProvider}, корневой элемент тестового дерева.
  */
 public final class TestRoot implements IGTestContentProviderNode {
 	private final IProject project;
@@ -14,9 +14,9 @@ public final class TestRoot implements IGTestContentProviderNode {
 	}
 
 	/**
-	 * Создаёт новый корень тестов для заданного проекта.
+	 * Создаёт новый {@link TestRoot} для заданного проекта.
 	 *
-	 * @param проект
+	 * @param project проект
 	 */
 	public TestRoot(IProject project) {
 		this.project = project;
@@ -43,7 +43,7 @@ public final class TestRoot implements IGTestContentProviderNode {
 	/**
 	 * Устанавливает состояние корня.
 	 *
-	 * @param новое состояние корня
+	 * @param state новое состояние корня
 	 */
 	public void setState(LoadingState state) {
 		this.state = state;

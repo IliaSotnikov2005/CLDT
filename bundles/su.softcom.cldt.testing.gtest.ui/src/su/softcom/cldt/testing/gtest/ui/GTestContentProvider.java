@@ -41,8 +41,8 @@ import su.softcom.cldt.testing.gtest.ui.models.TestSuiteNode;
 import su.softcom.cldt.testing.gtest.ui.models.TestRoot.LoadingState;
 
 /**
- * Представляет content provider для Gtest файлов. Выводит в Project Explorer в
- * раздел "Тесты"
+ * Поставщик содержимого рабочей среды для Gtest.
+ * Отображает структуру тестов в обозревателе проектов в разделе "Тесты".
  */
 public class GTestContentProvider extends WorkbenchContentProvider implements IPipelinedTreeContentProvider {
 
@@ -61,9 +61,13 @@ public class GTestContentProvider extends WorkbenchContentProvider implements IP
 	private final Map<IProject, TestRoot> projectRoots = new ConcurrentHashMap<>();
 
 	/**
-	 * Получает экземпляр провайдера
+	 * Возвращает единственный экземпляр провайдера.
 	 */
 	public static GTestContentProvider getInstance() {
+		if (instance == null) {
+            throw new IllegalStateException("GTestContentProvider не инициализирован");
+        }
+		
 		return instance;
 	}
 

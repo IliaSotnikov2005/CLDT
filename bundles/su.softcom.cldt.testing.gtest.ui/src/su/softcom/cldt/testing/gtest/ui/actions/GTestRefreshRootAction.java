@@ -8,14 +8,14 @@ import su.softcom.cldt.testing.gtest.ui.GTestContentProvider;
 import su.softcom.cldt.testing.gtest.ui.models.TestRoot;
 
 /**
- * Представляет действие для обновления корня тестового дерева.
+ * Действие для обновления корня тестового дерева.
  */
 public class GTestRefreshRootAction extends SelectionListenerAction {
 
 	private static final String RUN_REFRESH_ACTION_NAME = "Обновить тесты";
 
 	/**
-	 * Создаёт новый GTestRefreshRootAction.
+	 * Создаёт новый {@link GTestRefreshRootAction}.
 	 */
 	public GTestRefreshRootAction() {
 		super(RUN_REFRESH_ACTION_NAME);

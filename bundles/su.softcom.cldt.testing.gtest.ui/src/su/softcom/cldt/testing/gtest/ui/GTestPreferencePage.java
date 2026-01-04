@@ -44,10 +44,8 @@ import su.softcom.cldt.testing.gtest.core.GTestConstants;
 import su.softcom.cldt.testing.gtest.core.model.GTestInstance;
 
 /**
- * Страница “Preferences ▸ Google Test”.
- * <p>
- * Показывает список экземпляров GTest с их версиями и путями.
- * </p>
+ * Страница настроек экземпляров GTest.
+ * Показывает список экземпляров GTest с их версиями, путями или метками.
  */
 public final class GTestPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 

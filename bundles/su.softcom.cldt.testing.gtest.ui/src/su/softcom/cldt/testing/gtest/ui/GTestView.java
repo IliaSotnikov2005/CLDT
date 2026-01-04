@@ -48,7 +48,7 @@ import su.softcom.cldt.testing.gtest.ui.models.TestInfo;
 import su.softcom.cldt.testing.gtest.ui.models.TestSuite;
 
 /**
- * Окно результатов тестирования GTest.
+ * Панель результатов тестирования GTest.
  */
 public class GTestView extends ViewPart {
 	public static final String ID = "com.example.gtest.views.GTestView";
@@ -185,9 +185,10 @@ public class GTestView extends ViewPart {
 	    statsPanel.setLayout(layout);
 	    
 	    executedLabel = new Label(statsPanel, SWT.CENTER);
-	    executedLabel.setText("Запущено: 0/0");
+	    executedLabel.setText("Запущено: 000/000");
 	    GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
 	    gd1.horizontalAlignment = SWT.CENTER;
+	    gd1.minimumWidth = 50;
 	    executedLabel.setLayoutData(gd1);
 	    
 	    failedLabel = new Label(statsPanel, SWT.CENTER);

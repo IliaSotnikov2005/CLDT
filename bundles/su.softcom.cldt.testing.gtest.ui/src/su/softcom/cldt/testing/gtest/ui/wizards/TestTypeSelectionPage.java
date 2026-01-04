@@ -53,7 +53,7 @@ public class TestTypeSelectionPage extends WizardPage {
 		EMPTY,
 
 		/**
-		 * Тестовый файл на основе заголовочного файла.
+		 * Модульный тестовый файл на основе заголовочного файла.
 		 */
 		HEADER_BASED
 	}
@@ -84,7 +84,7 @@ public class TestTypeSelectionPage extends WizardPage {
 	/**
 	 * Создаёт новую страницу настроек генерации теста.
 	 * 
-	 * @param project проект для которого генерируется тест.
+	 * @param project проект, для которого генерируется тест.
 	 */
 	public TestTypeSelectionPage(IProject project) {
 		super("Создание теста");
@@ -99,7 +99,7 @@ public class TestTypeSelectionPage extends WizardPage {
 	/**
 	 * Получает выбранный тип теста.
 	 * 
-	 * @return
+	 * @return тип теста
 	 */
 	public TestType getSelectedTestType() {
 		return selectedTestType;
@@ -108,7 +108,7 @@ public class TestTypeSelectionPage extends WizardPage {
 	/**
 	 * Получает конфигурацию теста.
 	 * 
-	 * @return конфигурация теста.
+	 * @return конфигурация теста
 	 */
 	public TestConfiguration getTestConfiguration() {
 		if (selectedTestType == TestType.EMPTY) {

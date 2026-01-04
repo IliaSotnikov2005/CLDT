@@ -9,21 +9,26 @@ import su.softcom.cldt.testing.gtest.core.launch.GTestLaunchUtils;
 import su.softcom.cldt.testing.gtest.core.model.GTestExecutable;
 
 /**
- * Элемент, представляющий исполняемый файл gtest в дереве.
+ * Элемент {@link GTestContentProvider}, представляет исполняемый файл GTest.
  */
 public final class GTestExecutableNode extends LaunchableNode {
 
 	private final GTestExecutable gtestExecutable;
 
+	/**
+	 * Создаёт новый {@link GTestExecutableNode}
+	 * @param project проект
+	 * @param gtestExecutable объект {@link GTestExecutable}
+	 */
 	public GTestExecutableNode(IProject project, GTestExecutable gtestExecutable) {
 		super(project);
 		this.gtestExecutable = gtestExecutable;
 	}
 
 	/**
-	 * Получает объект исполняемого файла gtest.
+	 * Получает объект исполняемого файла GTest.
 	 *
-	 * @return объект исполняемого файла gtest
+	 * @return объект исполняемого файла GTest
 	 */
 	public GTestExecutable getGTestExecutable() {
 		return gtestExecutable;

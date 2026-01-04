@@ -1,6 +1,5 @@
 package su.softcom.cldt.testing.gtest.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -46,17 +45,18 @@ import su.softcom.cldt.testing.gtest.core.GTestUtils;
 import su.softcom.cldt.testing.gtest.core.model.GTestInstance;
 
 /**
- * Property Page для настройки GTest в проекте.
+ * Страница настроек тестирования для проекте.
  */
 public final class GTestPropertyPage extends FieldEditorPreferencePage implements IWorkbenchPropertyPage {
 
 	private IProject project;
 	private boolean needsBuildUpdate = false;
-
-	private List<GTestInstance> availableInstances = new ArrayList<>();
 	
 	ComboFieldEditor gtestInstanceCombo;
 
+	/**
+	 * Создаёт страницу настроек тестирования.
+	 */
 	public GTestPropertyPage() {
 		super(GRID);
 		setDescription("Настройки Google Test для проекта");
@@ -83,7 +83,7 @@ public final class GTestPropertyPage extends FieldEditorPreferencePage implement
 		setPreferenceStore(new ScopedPreferenceStore(new ProjectScope(project), GTestConstants.GTEST_NODE));
 		getPreferenceStore().setDefault(GTestConstants.TESTS_FOLDER_KEY, GTestConstants.DEFAULT_TESTS_FOLDER_NAME);
 
-		availableInstances = GTestInstancesManager.getRefreshedInstanses();
+		List<GTestInstance> availableInstances = GTestInstancesManager.getRefreshedInstanses();
 
 		String[][] gtestInstances = createComboItems(availableInstances);
 

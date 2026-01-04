@@ -10,19 +10,13 @@ import su.softcom.cldt.testing.gtest.ui.models.TestInfo;
 import su.softcom.cldt.testing.gtest.ui.models.TestSuite;
 
 /**
- * Content provider для окна результатов тестирования GTest.
+ * Поставщик содержимого рабочей среды для панели результатов тестирования GTest.
  */
 public class GTestViewContentProvider implements ITreeContentProvider {
     
     private boolean showFailedOnly = false;
     private boolean showSkippedOnly = false;
     private boolean showDisabledOnly = false;
-    
-    public void setFilters(boolean showFailedOnly, boolean showSkipped, boolean showDisabled) {
-        this.showFailedOnly = showFailedOnly;
-        this.showSkippedOnly = showSkipped;
-        this.showDisabledOnly = showDisabled;
-    }
     
     @Override
     public Object[] getElements(Object inputElement) {
@@ -36,17 +30,6 @@ public class GTestViewContentProvider implements ITreeContentProvider {
             return result.testsuites().toArray();
         }
         return new Object[0];
-    }
-    
-    private boolean hasVisibleTests(TestSuite suite) {
-        if (suite.testsuite() == null) return false;
-        for (TestInfo test : suite.testsuite()) {
-            if (shouldShowTest(test)) {
-                return true;
-            }
-        }
-        
-        return false;
     }
     
     @Override
@@ -69,6 +52,32 @@ public class GTestViewContentProvider implements ITreeContentProvider {
         return new Object[0];
     }
     
+    @Override
+    public Object getParent(Object element) {
+        return null;
+    }
+    
+    @Override
+    public boolean hasChildren(Object element) {
+        if (element instanceof TestSuite suite) {
+            return hasVisibleTests(suite);
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Устанавливает фильтры.
+     * @param showFailedOnly флаг отображения только проваленных тестов
+     * @param showSkipped флаг отображения только пропущенных тестов
+     * @param showDisabled флаг отображения только отключенных тестов
+     */
+    public void setFilters(boolean showFailedOnly, boolean showSkipped, boolean showDisabled) {
+        this.showFailedOnly = showFailedOnly;
+        this.showSkippedOnly = showSkipped;
+        this.showDisabledOnly = showDisabled;
+    }
+    
     private boolean shouldShowTest(TestInfo test) {
         if (showFailedOnly) {
             return test.isFailed();
@@ -85,15 +94,12 @@ public class GTestViewContentProvider implements ITreeContentProvider {
         return true;
     }
     
-    @Override
-    public Object getParent(Object element) {
-        return null;
-    }
-    
-    @Override
-    public boolean hasChildren(Object element) {
-        if (element instanceof TestSuite suite) {
-            return hasVisibleTests(suite);
+    private boolean hasVisibleTests(TestSuite suite) {
+        if (suite.testsuite() == null) return false;
+        for (TestInfo test : suite.testsuite()) {
+            if (shouldShowTest(test)) {
+                return true;
+            }
         }
         
         return false;

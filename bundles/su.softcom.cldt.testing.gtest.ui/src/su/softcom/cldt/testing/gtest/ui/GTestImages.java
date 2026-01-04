@@ -33,6 +33,10 @@ public class GTestImages {
 	public static final ImageDescriptor SHOW_SKIPPED_ICON = createUnManaged("", "skippedAct.png");
 	public static final ImageDescriptor SHOW_DISABLED_ICON = createUnManaged("", "disabledAct.png");
 
+	private GTestImages() {
+		// utility class
+	}
+	
 	private static ImageDescriptor create(String prefix, String name, boolean useMissingImageDescriptor) {
 		IPath path = ICONS_PATH.append(prefix).append(name);
 		return createImageDescriptor(Activator.getDefault().getBundle(), path, useMissingImageDescriptor);
@@ -44,10 +48,10 @@ public class GTestImages {
 
 	/**
 	 * Создаёт дескриптор изображения.
-	 * @param bundle бандл
-	 * @param path путь к изображению относительно бандла
-	 * @param useMissingImageDescriptor
-	 * @return Дескриптор изображения, null при неудаче
+	 * @param bundle модуль OSGi, содержащий ресурс изображения
+	 * @param path путь к изображению относительно модуля
+	 * @param useMissingImageDescriptor флаг использования изображения по умолчанию
+	 * @return дескриптор изображения, null в случае неудачи
 	 */
 	public static ImageDescriptor createImageDescriptor(Bundle bundle, IPath path, boolean useMissingImageDescriptor) {
 		IPath uriPath = new Path("/plugin").append(bundle.getSymbolicName()).append(path); //$NON-NLS-1$
@@ -65,11 +69,7 @@ public class GTestImages {
 		if (useMissingImageDescriptor) {
 			return ImageDescriptor.getMissingImageDescriptor();
 		}
+		
 		return null;
 	}
-
-	private GTestImages() {
-		// utility class
-	}
-
 }

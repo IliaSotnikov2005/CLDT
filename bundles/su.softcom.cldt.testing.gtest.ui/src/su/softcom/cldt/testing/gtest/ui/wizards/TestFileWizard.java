@@ -12,7 +12,7 @@ import su.softcom.cldt.testing.gtest.core.GTestUtils;
 import su.softcom.cldt.testing.gtest.ui.wizards.TestTypeSelectionPage.TestType;
 
 /**
- * Визард создания тестового файла.
+ * Мастер создания тестового файла.
  */
 public class TestFileWizard extends AbstractTestWizard {
     

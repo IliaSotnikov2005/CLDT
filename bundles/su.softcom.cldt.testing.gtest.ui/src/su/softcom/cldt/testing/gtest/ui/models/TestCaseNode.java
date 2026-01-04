@@ -8,6 +8,9 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import su.softcom.cldt.testing.gtest.core.launch.GTestLaunchUtils;
 import su.softcom.cldt.testing.gtest.core.model.GTestExecutable;
 
+/**
+ * Элемент {@link GTestContentProvider}, представляет тестовый случай.
+ */
 public final class TestCaseNode extends LaunchableNode {
 
 	private static final String DISABLED_LABEL = "_DISABLED"; //$NON-NLS-1$
@@ -18,6 +21,13 @@ public final class TestCaseNode extends LaunchableNode {
 
 	private final GTestExecutable gtestExecutable;
 
+	/**
+	 * Создаёт новый {@link TestCaseNode}.
+	 * @param project проект
+	 * @param gtestExecutable объект исполняемого файла GTest
+	 * @param testSuite объект тестового набора GTest
+	 * @param testCase 
+	 */
 	public TestCaseNode(IProject project, GTestExecutable gtestExecutable, GTestExecutable.TestSuite testSuite,
 			GTestExecutable.TestCase testCase) {
 		super(project);
@@ -27,18 +37,18 @@ public final class TestCaseNode extends LaunchableNode {
 	}
 
 	/**
-	 * Получает объект TestCase.
+	 * Получает объект {@link TestCase}.
 	 *
-	 * @return TestCase
+	 * @return объект, представляющий тестовый случай
 	 */
 	public GTestExecutable.TestCase getTestCase() {
 		return testCase;
 	}
 
 	/**
-	 * Получает объект TestSuite.
+	 * Получает объект {@link TestSuite}.
 	 *
-	 * @return TestSuite
+	 * @return объект, представляющий тестовый набор
 	 */
 	public GTestExecutable.TestSuite getTestSuite() {
 		return testSuite;

@@ -28,11 +28,11 @@ public record GTestInstance(
 	private static final ObjectMapper objectMapper = createObjectMapper();
 	
 	/**
-	 * Создаёт новый GTestInstance.
-	 * @param path путь к папке/файлу конфигурации
+	 * Создаёт новый {@link GTestInstance}.
+	 * @param path путь к папке исходных файлов или файлу конфигурации
 	 * @param version версия
 	 * @param type тип: "Встроенный", "Системный", "Пользовательский"
-	 * @param tag метка для экземпляра, отображается вместо path в UI
+	 * @param tag метка для экземпляра, отображается вместо пути в UI
 	 */
 	public GTestInstance(String path, String version, String type, String tag) {
         this.path = path != null ? path : "";
@@ -43,7 +43,7 @@ public record GTestInstance(
 	
 	/**
 	 * Создаёт новый GTestInstance c пустой меткой.
-	 * @param path путь к папке/файлу конфигурации
+	 * @param path путь к папке исходных файлов или файлу конфигурации
 	 * @param version версия
 	 * @param type тип: "Встроенный", "Системный", "Пользовательский"
 	 */
@@ -53,17 +53,17 @@ public record GTestInstance(
 
 
 	/**
-	 * Получает путь к GTest в виде IPath.
-	 * @return путь в виде IPath
+	 * Получает путь к GTest в виде {@link Path}.
+	 * @return путь в виде {@link Path}
 	 */
 	public Path asPath() {
 	    return Paths.get(path);
 	}
 
 	/**
-	 * Получает получает GTestInstance из json.
-	 * @param json json
-	 * @return объект GTestInstance
+	 * Получает {@link GTestInstance} из json.
+	 * @param json json-содержимое
+	 * @return объект {@link GTestInstance}
 	 */
 	public static GTestInstance fromJson(String json) {
 		try {
@@ -74,9 +74,9 @@ public record GTestInstance(
 	}
 	
 	/**
-	 * Получает список GTestInstance из json.
-	 * @param json json
-	 * @return список GTestInstance
+	 * Получает список {@link GTestInstance} из json.
+	 * @param json json-содержимое
+	 * @return список {@link GTestInstance}
 	 */
 	public static List<GTestInstance> listFromJson(String json) {
 		try {
@@ -88,18 +88,18 @@ public record GTestInstance(
 	}
 
 	/**
-	 * Преобразует GTestInstance в json.
-	 * @return json-представление GTestInstance
-	 * @throws JsonProcessingException при ошибке преобразования
+	 * Преобразует {@link GTestInstance} в json-формат.
+	 * @return json-представление {@link GTestInstance}
+	 * @throws {@link JsonProcessingException} при ошибке преобразования
 	 */
 	public String toJson() throws JsonProcessingException {
 		return objectMapper.writeValueAsString(this);
 	}
  
 	/**
-	 * Преобразует список GTestInstance в json.
-	 * @return json-представление списка GTestInstance
-	 * @throws JsonProcessingException при ошибке преобразования
+	 * Преобразует список {@link GTestInstance} в json-формат.
+	 * @return json-представление списка {@link GTestInstance}
+	 * @throws {@link JsonProcessingException} при ошибке преобразования
 	 */
 	public static String listToJson(List<GTestInstance> instances) throws JsonProcessingException {
 		return objectMapper.writeValueAsString(instances);

@@ -11,13 +11,13 @@ import java.io.IOException;
 import org.eclipse.core.resources.IFile;
 
 /**
- * Парсер json-результата работы GTest.
+ * Парсер json-отчёта работы GTest.
  */
 public class GTestJsonParser {
     private final ObjectMapper objectMapper;
 
     /**
-     * Создаёт новый объект GTestJsonParser.
+     * Создаёт новый объект {@link GTestJsonParser}.
      */
     public GTestJsonParser() {
         this.objectMapper = new ObjectMapper();
@@ -25,10 +25,10 @@ public class GTestJsonParser {
     }
 
     /**
-     * Парсит json-файл результата работы GTest.
-     * @param jsonFile файл результата вывода GTest.
-     * @return объект GTestResult.
-     * @throws IOException если json-файл не найден.
+     * Парсит json-отчёт работы GTest.
+     * @param jsonFile файл отчёта GTest.
+     * @return объект {@link GTestResult}.
+     * @throws {@link IOException} если json-файл не найден.
      */
     public GTestResult parseJsonFile(IFile jsonFile) throws IOException {
         if (!jsonFile.exists()) {

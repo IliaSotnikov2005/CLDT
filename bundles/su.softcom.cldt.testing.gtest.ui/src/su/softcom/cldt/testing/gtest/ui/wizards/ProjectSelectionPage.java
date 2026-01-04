@@ -31,7 +31,7 @@ import su.softcom.cldt.core.CMakeProjectNature;
 import su.softcom.cldt.testing.gtest.core.GTestConstants;
 
 /**
- * Страница выбора проекта для создания теста.
+ * Страница выбора проекта для мастера создания теста.
  */
 public class ProjectSelectionPage extends WizardPage {
     
@@ -83,7 +83,7 @@ public class ProjectSelectionPage extends WizardPage {
     
     /**
      * Получает выбранный проект.
-     * @return выбранный проект.
+     * @return выбранный проект
      */
     public IProject getSelectedProject() {
         return selectedProject;
@@ -91,7 +91,7 @@ public class ProjectSelectionPage extends WizardPage {
     
     /**
      * Получает папку тестов проекта.
-     * @return папка тестов проекта.
+     * @return папка тестов проекта
      */
     public String getTestsFolder() {
         return testsFolderText.getText();

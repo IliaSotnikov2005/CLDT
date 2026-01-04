@@ -7,7 +7,7 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.actions.ILaunchable;
 
 /**
- * Элемент, поддерживающий запуск тестов.
+ * Элемент {@link GTestContentProvider}, поддерживающий запуск тестов.
  */
 public abstract class LaunchableNode implements ILaunchable, IGTestContentProviderNode {
 	protected final IProject project;
@@ -38,9 +38,9 @@ public abstract class LaunchableNode implements ILaunchable, IGTestContentProvid
 	 * Получает конфигурацию запуска.
 	 *
 	 * @return конфигурация запуска
-	 * @throws CoreException при внутренней ошибке
+	 * @throws {@link CoreException} при внутренней ошибке
 	 */
-	public ILaunchConfiguration launch() throws CoreException {
+	public ILaunchConfiguration getLaunchConfiguration() throws CoreException {
 		ILaunchConfiguration config = createLaunchConfig();
 
 		DebugUITools.launch(config, getLaunchMode());
@@ -51,8 +51,8 @@ public abstract class LaunchableNode implements ILaunchable, IGTestContentProvid
 	/**
 	 * Создает конфигурацию запуска для данного элемента.
 	 *
-	 * @return объект ILaunchConfiguration
-	 * @throws CoreException при внутренней ошибке
+	 * @return объект {@link ILaunchConfiguration}
+	 * @throws {@link CoreException} при внутренней ошибке
 	 */
 	protected abstract ILaunchConfiguration createLaunchConfig() throws CoreException;
 }

@@ -1,5 +1,8 @@
 package su.softcom.cldt.testing.gtest.core;
 
+/**
+ * Константы, используемые для работы с GTest. 
+ */
 public final class GTestConstants {
 	private GTestConstants() {
 	}

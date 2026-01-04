@@ -18,21 +18,23 @@ import su.softcom.cldt.testing.gtest.core.GTestConstants;
 import su.softcom.cldt.testing.gtest.core.model.GTestExecutable;
 
 /**
- * Вспомогательные методы для конфигурации запуска тестов gtest.
+ * Вспомогательные методы для конфигурации запуска тестов GTest.
  */
 public final class GTestLaunchUtils {
-	public static final String GTEST_OUTPUT_JSON = "test_detail.json";
+	private static final String GTEST_OUTPUT_JSON = "test_detail.json";
 	
-	private GTestLaunchUtils() {}
+	private GTestLaunchUtils() {
+		// empty
+	}
     
     /**
-     * Создаёт конфигурацию запуска для GTestExecutable.
+     * Создаёт конфигурацию запуска для {@link GTestExecutable}.
      *
      * @param project проект
      * @param gtest объект теста
      * @param gtestFilter фильтр для запуска теста
-     * @return объект ILaunchConfiguration
-     * @throws CoreException при внутренней ошибке
+     * @return объект {@link ILaunchConfiguration}
+     * @throws {@link CoreException} при внутренней ошибке
      */
     public static ILaunchConfiguration createLaunchConfig(IProject project, 
                                                          GTestExecutable gtest,
@@ -91,8 +93,6 @@ public final class GTestLaunchUtils {
             .append("Release")
             .append(testsFolderName)
             .append(GTEST_OUTPUT_JSON);
-        
-        System.out.println(jsonOutputPath);
         
         List<String> additionalArgs = List.of(
             "--gtest_output=json:" + jsonOutputPath.toOSString()

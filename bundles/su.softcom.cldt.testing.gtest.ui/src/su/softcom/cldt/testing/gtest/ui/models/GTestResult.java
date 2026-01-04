@@ -17,22 +17,22 @@ public record GTestResult(
 ) {
 	/**
 	 * Получает количество пройденных тестов.
-	 * @return количество пройденных тестов.
+	 * @return количество пройденных тестов
 	 */
     public int getPassedCount() {
         return tests - failures - errors - disabled;
     }
     
     /**
-	 * Говорит, есть ли ошибки при выполнении тестов.
-	 * @return true, если есть непройденные тесты или ошибки при выполнении.
+	 * Проверяет, есть ли ошибки при выполнении тестов.
+	 * @return true, если есть непройденные тесты или ошибки при выполнении
 	 */
     public boolean hasFailures() {
         return failures > 0 || errors > 0;
     }
     /**
 	 * Получает количество запущеных тестов.
-	 * @return количество запущенных тестов.
+	 * @return количество запущенных тестов
 	 */
     public int getExecutedCount() {
         return tests - disabled;

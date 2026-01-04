@@ -16,11 +16,11 @@ import su.softcom.cldt.testing.gtest.ui.models.TestRoot;
 import su.softcom.cldt.testing.gtest.ui.models.TestSuiteNode;
 
 /**
- * Класс GTestLabelProvider.
+ * Поставщик меток для элементов GTest.
  */
 public class GTestLabelProvider extends LabelProvider {
 	
-	// <a href="https://www.flaticon.com/ru/free-icons/" title="фляга иконки">Фляга иконки от Freepik - Flaticon</a>
+	// <a href="https://www.flaticon.com/ru/free-icons/"</a>
 	
 	private Map<ImageDescriptor, Image> iconImageMap = new HashMap<>();
 	

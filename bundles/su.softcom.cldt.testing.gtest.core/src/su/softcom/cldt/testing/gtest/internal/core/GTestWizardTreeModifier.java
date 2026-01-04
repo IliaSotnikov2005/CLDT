@@ -8,7 +8,7 @@ import su.softcom.cldt.core.cmake.CMakeRoot;
 import su.softcom.cldt.core.cmake.CommandNode;
 
 /**
- * Модификатор CMake дерева для визардов GTest.
+ * Модификатор CMake дерева для мастера создания тестов GTest.
  * Создаёт цель сборки для тестов или добавляет созданный тест в существующую.
  */
 public class GTestWizardTreeModifier {

@@ -9,13 +9,13 @@ import org.eclipse.ui.actions.SelectionListenerAction;
 import su.softcom.cldt.testing.gtest.ui.models.LaunchableNode;
 
 /**
- * Представляет действие для запуска тестов.
+ * Действие для запуска теста.
  */
 public class GTestRunAction extends SelectionListenerAction {
 	private static final String RUN_TEST_ACTION_NAME = "Запустить тест";
 
 	/**
-	 * Создает новый GTestRunAction.
+	 * Создает новый {@link GTestRunAction}.
 	 */
 	public GTestRunAction() {
 		super(RUN_TEST_ACTION_NAME);
@@ -31,7 +31,7 @@ public class GTestRunAction extends SelectionListenerAction {
 		for (Object element : selectedTests) {
 			if (element instanceof LaunchableNode launchable) {
 				try {
-					launchable.launch();
+					launchable.getLaunchConfiguration();
 				} catch (CoreException e) {
 					Platform.getLog(getClass()).error(e.getMessage());
 				}

@@ -9,7 +9,7 @@ import su.softcom.cldt.testing.gtest.core.launch.GTestLaunchUtils;
 import su.softcom.cldt.testing.gtest.core.model.GTestExecutable;
 
 /**
- * Элемент, представляющий группу тестов в тестовом дереве.
+ * Элемент {@link GTestContentProvider}, представляющий группу тестов в тестовом дереве.
  */
 public final class TestSuiteNode extends LaunchableNode {
 
@@ -19,6 +19,12 @@ public final class TestSuiteNode extends LaunchableNode {
 
 	private final GTestExecutable gtestExecutable;
 
+	/**
+	 * Создаёт новый {@link TestSuiteNode}
+	 * @param project проект
+	 * @param gtestExecutable объект исполняемого файла GTest
+	 * @param testSuite объект тестового набора
+	 */
 	public TestSuiteNode(IProject project, GTestExecutable gtestExecutable, GTestExecutable.TestSuite testSuite) {
 		super(project);
 		this.gtestExecutable = gtestExecutable;

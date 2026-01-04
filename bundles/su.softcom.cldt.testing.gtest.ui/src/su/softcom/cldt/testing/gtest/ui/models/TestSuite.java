@@ -3,7 +3,7 @@ package su.softcom.cldt.testing.gtest.ui.models;
 import java.util.List;
 
 /**
- * Представляет тестовый набор.
+ * Представляет результат выполнения тестового набора.
  */
 public record TestSuite(
     String name,
@@ -17,7 +17,7 @@ public record TestSuite(
 ) {
 	/**
 	 * Проверяет есть ли не пройденные тесты.
-	 * @return true, если есть непройденные тесты, иначе false.
+	 * @return {@code true}, если есть непройденные тесты, иначе {@code false}.
 	 */
     public boolean hasFailures() {
         return failures > 0;

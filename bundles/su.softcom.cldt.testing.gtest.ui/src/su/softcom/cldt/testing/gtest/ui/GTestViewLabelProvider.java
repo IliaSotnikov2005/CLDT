@@ -13,7 +13,7 @@ import su.softcom.cldt.testing.gtest.ui.models.TestInfo;
 import su.softcom.cldt.testing.gtest.ui.models.TestSuite;
 
 /**
- * Label provider для окна результатов тестирования GTest.
+ * Поставщик меток для панели результатов тестирования GTest.
  */
 public class GTestViewLabelProvider extends LabelProvider {
 

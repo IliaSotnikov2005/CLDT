@@ -3,7 +3,7 @@ package su.softcom.cldt.testing.gtest.ui.models;
 import java.util.List;
 
 /**
- * Представляет тестовый случай.
+ * Представляет результат выполнения тестового случая.
  */
 public record TestInfo(
 	    String name,
@@ -19,7 +19,7 @@ public record TestInfo(
 	) {
 		/**
 		 * Проверяет провален ли тест.
-		 * @return true, если провелен, иначе false.
+		 * @return {@code true}, если провелен, иначе {@code false}.
 		 */
 	    public boolean isFailed() {
 	        return failures != null && !failures.isEmpty();
@@ -27,7 +27,7 @@ public record TestInfo(
 	    
 	    /**
 	     * Проверяет пройден ли тест.
-	     * @return true, если пройден, иначе false.
+	     * @return {@code true}, если пройден, иначе {@code false}.
 	     */
 	    public boolean isPassed() {
 	        return "COMPLETED".equals(result) && !isFailed() && !isSkipped();
@@ -35,7 +35,7 @@ public record TestInfo(
 	    
 	    /**
 	     * Проверяет пропущен ли тест.
-	     * @return true, если пропущен, иначе false.
+	     * @return {@code true}, если пропущен, иначе {@code false}.
 	     */
 	    public boolean isSkipped() {
 	        return "SKIPPED".equals(result) || (skipped != null && !skipped.isEmpty());
@@ -43,7 +43,7 @@ public record TestInfo(
 	    
 	    /**
 	     * Проверяет отключен ли тест.
-	     * @return true, если отключен, иначе false.
+	     * @return {@code true}, если отключен, иначе {@code false}.
 	     */
 	    public boolean isDisabled() {
 	        return "SUPPRESSED".equals(result) || "NOTRUN".equals(status);
