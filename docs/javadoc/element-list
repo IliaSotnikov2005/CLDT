@@ -1,0 +1,8 @@
+su.softcom.cldt.testing.gtest.core
+su.softcom.cldt.testing.gtest.core.launch
+su.softcom.cldt.testing.gtest.core.model
+su.softcom.cldt.testing.gtest.internal.core
+su.softcom.cldt.testing.gtest.ui
+su.softcom.cldt.testing.gtest.ui.actions
+su.softcom.cldt.testing.gtest.ui.models
+su.softcom.cldt.testing.gtest.ui.wizards
